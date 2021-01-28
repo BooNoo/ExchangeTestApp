@@ -10,11 +10,23 @@ import UIKit
 class CurrencyExchangeCell: UICollectionViewCell
 {
     
-    
+    private let currencyLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        label.textColor = .black
+        return label
+    }()
     
     static let cellId = "CurrencyExchangeCellId"
+    public var currency: Currency? {
+        didSet {
+            guard let currency = currency else { return }
+            self.setupData(data: currency)
+        }
+    }
     
-    override init(frame: CGRect) {
+    override init(frame: CGRect)
+    {
         super.init(frame: frame)
         addSubviews()
         setupConstraints()
@@ -28,21 +40,29 @@ class CurrencyExchangeCell: UICollectionViewCell
     {
         backgroundColor = .blue
         contentView.backgroundColor = .red
-        
-        layoutSubviews()
-        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10))
+
+        [currencyLabel,
+        ]
+        .forEach {
+            contentView.addSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
     }
     
     private func setupConstraints()
     {
-//        let contentViewConstraints = [
-////            contentView.leftAnchor.constraint(equalTo: leftAnchor, constant: 10),
-////            contentView.rightAnchor.constraint(equalTo: rightAnchor, constant: -10),
-//        ]
-//        
-//        [contentViewConstraints]
-//            .forEach(NSLayoutConstraint.activate(_:))
-
+        let currencyLabelConstraints = [
+            currencyLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            currencyLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 5),
+        ]
         
+        [currencyLabelConstraints]
+            .forEach(NSLayoutConstraint.activate(_:))
+    }
+    
+    
+    private func setupData(data: Currency)
+    {
+        currencyLabel.text = data.code
     }
 }

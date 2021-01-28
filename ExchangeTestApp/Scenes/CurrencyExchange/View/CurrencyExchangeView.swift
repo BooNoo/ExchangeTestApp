@@ -65,12 +65,21 @@ class CurrencyExchangeView: UIView
             .forEach(NSLayoutConstraint.activate(_:))
     }
     
+    public func setupData(data: [Currency])
+    {
+        exchangeFromCollectionView.data = data
+        exchangeFromCollectionView.reloadData()
+        
+        exchangeToCollectionView.data = data
+        exchangeToCollectionView.reloadData()
+    }
+    
 }
-
-
 
 class CurrencyExchangeCollectionView: UICollectionView
 {
+    
+    public var data: [Currency] = []
     
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
@@ -114,11 +123,12 @@ class CurrencyExchangeCollectionView: UICollectionView
 extension CurrencyExchangeCollectionView: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout
 {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        return data.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurrencyExchangeCell.cellId, for: indexPath) as! CurrencyExchangeCell
+        cell.currency = data[indexPath.row]
         return cell
     }
     

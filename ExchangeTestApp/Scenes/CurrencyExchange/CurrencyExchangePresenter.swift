@@ -15,14 +15,20 @@ import UIKit
 protocol CurrencyExchangePresentationLogic
 {
     func setNavigationTitle(responce: CurrencyExchange.SetNavigationTitle.Response)
+    func presentFetchedCurrencies(response: CurrencyExchange.FetchCurrencies.Response)
 }
 
-class CurrencyExchangePresenter: CurrencyExchangePresentationLogic
+class CurrencyExchangePresenter
 {
   weak var viewController: CurrencyExchangeDisplayLogic?
 }
 
-extension CurrencyExchangePresenter {
+extension CurrencyExchangePresenter: CurrencyExchangePresentationLogic {
+    func presentFetchedCurrencies(response: CurrencyExchange.FetchCurrencies.Response)
+    {
+        viewController?.displayFetchedCurrencies(viewModel: CurrencyExchange.FetchCurrencies.ViewModel(currencies: response.currencies))
+    }
+    
     func setNavigationTitle(responce: CurrencyExchange.SetNavigationTitle.Response)
     {
         viewController?.setNavigationTitle(viewModel: CurrencyExchange.SetNavigationTitle.ViewModel(title: responce.title))

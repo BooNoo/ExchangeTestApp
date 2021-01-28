@@ -15,9 +15,10 @@ import UIKit
 protocol CurrencyExchangeDisplayLogic: class
 {
     func setNavigationTitle(viewModel: CurrencyExchange.SetNavigationTitle.ViewModel)
+    func displayFetchedCurrencies(viewModel: CurrencyExchange.FetchCurrencies.ViewModel)
 }
 
-class CurrencyExchangeViewController: UIViewController, CurrencyExchangeDisplayLogic
+class CurrencyExchangeViewController: UIViewController
 {
     var contentView = CurrencyExchangeView()
     var interactor: CurrencyExchangeBusinessLogic?
@@ -61,6 +62,7 @@ class CurrencyExchangeViewController: UIViewController, CurrencyExchangeDisplayL
     {
         super.viewDidLoad()
         interactor?.getNavigationTitle(request: CurrencyExchange.SetNavigationTitle.Request())
+        interactor?.fetchCurrencies(request: CurrencyExchange.FetchCurrencies.Request())
     }
     
     private func setupView()
@@ -74,7 +76,11 @@ class CurrencyExchangeViewController: UIViewController, CurrencyExchangeDisplayL
 
 }
 
-extension CurrencyExchangeViewController {
+extension CurrencyExchangeViewController: CurrencyExchangeDisplayLogic {
+    
+    func displayFetchedCurrencies(viewModel: CurrencyExchange.FetchCurrencies.ViewModel) {
+        contentView.setupData(data: viewModel.currencies)
+    }
     
     func setNavigationTitle(viewModel: CurrencyExchange.SetNavigationTitle.ViewModel)
     {

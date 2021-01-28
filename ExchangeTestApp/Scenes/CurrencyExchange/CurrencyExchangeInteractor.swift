@@ -15,36 +15,41 @@ import UIKit
 protocol CurrencyExchangeBusinessLogic
 {
     func getNavigationTitle(request: CurrencyExchange.SetNavigationTitle.Request)
+    func fetchCurrencies(request: CurrencyExchange.FetchCurrencies.Request)
 }
 
 protocol CurrencyExchangeDataStore
 {
-  //var name: String { get set }
+    var currencies: [Currency] { get set }
 }
 
-class CurrencyExchangeInteractor: CurrencyExchangeBusinessLogic, CurrencyExchangeDataStore
+class CurrencyExchangeInteractor: CurrencyExchangeDataStore
 {
+    var presenter: CurrencyExchangePresentationLogic?
+    var worker: CurrencyExchangeWorker? = CurrencyExchangeWorker()
+    var currencies: [Currency] = []
+                
+}
 
+extension CurrencyExchangeInteractor: CurrencyExchangeBusinessLogic
+{
+    func fetchCurrencies(request: CurrencyExchange.FetchCurrencies.Request)
+    {
+        let queue = DispatchQueue.global(qos: .userInitiated)
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            Thread.sleep(until: Date().addingTimeInterval(3))
+            self.worker?.fetchCurrencies(completionHandler: { (currencies) in
+                DispatchQueue.main.async {
+                    self.currencies = currencies
+                    self.presenter?.presentFetchedCurrencies(response: CurrencyExchange.FetchCurrencies.Response(currencies: self.currencies))
+                }
+            })
+        }
+    }
     
-  var presenter: CurrencyExchangePresentationLogic?
-  var worker: CurrencyExchangeWorker?
-  //var name: String = ""
-  
-  // MARK: Do something
-  
-//  func doSomething(request: CurrencyExchange.Something.Request)
-//  {
-//    worker = CurrencyExchangeWorker()
-//    worker?.doSomeWork()
-//
-//    let response = CurrencyExchange.Something.Response()
-//    presenter?.presentSomething(response: response)
-//  }
-}
-
-extension CurrencyExchangeInteractor
-{
-    func getNavigationTitle(request: CurrencyExchange.SetNavigationTitle.Request) {
+    func getNavigationTitle(request: CurrencyExchange.SetNavigationTitle.Request)
+    {
         presenter?.setNavigationTitle(responce: CurrencyExchange.SetNavigationTitle.Response(title: "€1.0 = €1.0"))
     }
 }

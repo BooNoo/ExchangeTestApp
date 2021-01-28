@@ -14,20 +14,36 @@ import UIKit
 
 enum CurrencyExchange
 {
-  // MARK: Use cases
-  
-  enum SetNavigationTitle
-  {
-    struct Request
+    // MARK: Use cases
+    
+    enum SetNavigationTitle
     {
+        struct Request
+        {
+        }
+        struct Response
+        {
+            var title: String
+        }
+        struct ViewModel
+        {
+            var title: String
+        }
     }
-    struct Response
+    
+    enum FetchCurrencies
     {
-        var title: String
+        struct Request
+        {
+        }
+        struct Response
+        {
+            var currencies: [Currency]
+        }
+        struct ViewModel
+        {
+            var currencies: [Currency]
+        }
     }
-    struct ViewModel
-    {
-        var title: String
-    }
-  }
+    
 }

@@ -21,6 +21,9 @@
 		80EDD56525C196EA008754FD /* CurrencyExchangeInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80EDD55F25C196EA008754FD /* CurrencyExchangeInteractor.swift */; };
 		80EDD58425C19860008754FD /* CurrencyExchangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80EDD58325C19860008754FD /* CurrencyExchangeView.swift */; };
 		80EDD58D25C19DFA008754FD /* CurrencyExchangeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80EDD58C25C19DFA008754FD /* CurrencyExchangeCell.swift */; };
+		D6A829F125C2ECC0002922F8 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A829F025C2ECC0002922F8 /* Currency.swift */; };
+		D6A829F825C2EEDD002922F8 /* CurrencyWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A829F725C2EEDD002922F8 /* CurrencyWorker.swift */; };
+		D6A82A2425C2F068002922F8 /* CurrencyMemmoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A82A2325C2F068002922F8 /* CurrencyMemmoryStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +64,9 @@
 		80EDD55F25C196EA008754FD /* CurrencyExchangeInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyExchangeInteractor.swift; sourceTree = "<group>"; };
 		80EDD58325C19860008754FD /* CurrencyExchangeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyExchangeView.swift; sourceTree = "<group>"; };
 		80EDD58C25C19DFA008754FD /* CurrencyExchangeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyExchangeCell.swift; sourceTree = "<group>"; };
+		D6A829F025C2ECC0002922F8 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
+		D6A829F725C2EEDD002922F8 /* CurrencyWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyWorker.swift; sourceTree = "<group>"; };
+		D6A82A2325C2F068002922F8 /* CurrencyMemmoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyMemmoryStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +117,9 @@
 		80EDD50425C19150008754FD /* ExchangeTestApp */ = {
 			isa = PBXGroup;
 			children = (
+				D6A829F625C2EEBA002922F8 /* Services */,
+				D6A829F525C2EEB3002922F8 /* Workers */,
+				D6A829EC25C2EC99002922F8 /* Models */,
 				80EDD55525C196BB008754FD /* Scenes */,
 				80EDD50525C19150008754FD /* AppDelegate.swift */,
 				80EDD50725C19150008754FD /* SceneDelegate.swift */,
@@ -153,8 +162,8 @@
 				80EDD58225C1984E008754FD /* View */,
 				80EDD55E25C196EA008754FD /* CurrencyExchangeViewController.swift */,
 				80EDD55A25C196EA008754FD /* CurrencyExchangePresenter.swift */,
-				80EDD55B25C196EA008754FD /* CurrencyExchangeWorker.swift */,
 				80EDD55F25C196EA008754FD /* CurrencyExchangeInteractor.swift */,
+				80EDD55B25C196EA008754FD /* CurrencyExchangeWorker.swift */,
 				80EDD55C25C196EA008754FD /* CurrencyExchangeRouter.swift */,
 				80EDD55D25C196EA008754FD /* CurrencyExchangeModels.swift */,
 			);
@@ -176,6 +185,30 @@
 				80EDD58C25C19DFA008754FD /* CurrencyExchangeCell.swift */,
 			);
 			path = Cell;
+			sourceTree = "<group>";
+		};
+		D6A829EC25C2EC99002922F8 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				D6A829F025C2ECC0002922F8 /* Currency.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		D6A829F525C2EEB3002922F8 /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				D6A829F725C2EEDD002922F8 /* CurrencyWorker.swift */,
+			);
+			path = Workers;
+			sourceTree = "<group>";
+		};
+		D6A829F625C2EEBA002922F8 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				D6A82A2325C2F068002922F8 /* CurrencyMemmoryStore.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -311,8 +344,11 @@
 				80EDD58425C19860008754FD /* CurrencyExchangeView.swift in Sources */,
 				80EDD50625C19150008754FD /* AppDelegate.swift in Sources */,
 				80EDD56425C196EA008754FD /* CurrencyExchangeViewController.swift in Sources */,
+				D6A829F825C2EEDD002922F8 /* CurrencyWorker.swift in Sources */,
 				80EDD56025C196EA008754FD /* CurrencyExchangePresenter.swift in Sources */,
 				80EDD50825C19150008754FD /* SceneDelegate.swift in Sources */,
+				D6A829F125C2ECC0002922F8 /* Currency.swift in Sources */,
+				D6A82A2425C2F068002922F8 /* CurrencyMemmoryStore.swift in Sources */,
 				80EDD56325C196EA008754FD /* CurrencyExchangeModels.swift in Sources */,
 				80EDD56225C196EA008754FD /* CurrencyExchangeRouter.swift in Sources */,
 				80EDD56125C196EA008754FD /* CurrencyExchangeWorker.swift in Sources */,
