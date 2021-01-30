@@ -11,9 +11,9 @@ class CurrencyMemmoryStore: CurrencyStoreProtocol
 {
     
     static var currencies: [Currency] = [
-        Currency(code: "EUR", value: 1.0),
-        Currency(code: "USD", value: 1.2),
-        Currency(code: "GBP", value: 1.2),
+        Currency(code: "EUR", value: 1.0, symbol: "€"),
+        Currency(code: "USD", value: 1.2091, symbol: "$"),
+        Currency(code: "GBP", value: 0.88603, symbol: "₤"),
     ]
     
     func fetchCurrencies(completionHandler: @escaping (() throws -> [Currency]) -> Void) {

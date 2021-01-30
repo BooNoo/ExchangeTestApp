@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		805B2EBB25C527B000E3C395 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 805B2EBA25C527B000E3C395 /* User.swift */; };
+		805B2EC025C5284800E3C395 /* UserWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 805B2EBF25C5284800E3C395 /* UserWorker.swift */; };
+		805B2EC525C528CC00E3C395 /* UserMemmoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 805B2EC425C528CC00E3C395 /* UserMemmoryStore.swift */; };
 		80EDD50625C19150008754FD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80EDD50525C19150008754FD /* AppDelegate.swift */; };
 		80EDD50825C19150008754FD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80EDD50725C19150008754FD /* SceneDelegate.swift */; };
 		80EDD50F25C19151008754FD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 80EDD50E25C19151008754FD /* Assets.xcassets */; };
@@ -44,6 +47,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		805B2EBA25C527B000E3C395 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		805B2EBF25C5284800E3C395 /* UserWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserWorker.swift; sourceTree = "<group>"; };
+		805B2EC425C528CC00E3C395 /* UserMemmoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMemmoryStore.swift; sourceTree = "<group>"; };
 		80EDD50225C19150008754FD /* ExchangeTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExchangeTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		80EDD50525C19150008754FD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		80EDD50725C19150008754FD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -191,6 +197,7 @@
 			isa = PBXGroup;
 			children = (
 				D6A829F025C2ECC0002922F8 /* Currency.swift */,
+				805B2EBA25C527B000E3C395 /* User.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -199,6 +206,7 @@
 			isa = PBXGroup;
 			children = (
 				D6A829F725C2EEDD002922F8 /* CurrencyWorker.swift */,
+				805B2EBF25C5284800E3C395 /* UserWorker.swift */,
 			);
 			path = Workers;
 			sourceTree = "<group>";
@@ -207,6 +215,7 @@
 			isa = PBXGroup;
 			children = (
 				D6A82A2325C2F068002922F8 /* CurrencyMemmoryStore.swift */,
+				805B2EC425C528CC00E3C395 /* UserMemmoryStore.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -343,14 +352,17 @@
 				80EDD56525C196EA008754FD /* CurrencyExchangeInteractor.swift in Sources */,
 				80EDD58425C19860008754FD /* CurrencyExchangeView.swift in Sources */,
 				80EDD50625C19150008754FD /* AppDelegate.swift in Sources */,
+				805B2EC525C528CC00E3C395 /* UserMemmoryStore.swift in Sources */,
 				80EDD56425C196EA008754FD /* CurrencyExchangeViewController.swift in Sources */,
 				D6A829F825C2EEDD002922F8 /* CurrencyWorker.swift in Sources */,
 				80EDD56025C196EA008754FD /* CurrencyExchangePresenter.swift in Sources */,
+				805B2EBB25C527B000E3C395 /* User.swift in Sources */,
 				80EDD50825C19150008754FD /* SceneDelegate.swift in Sources */,
 				D6A829F125C2ECC0002922F8 /* Currency.swift in Sources */,
 				D6A82A2425C2F068002922F8 /* CurrencyMemmoryStore.swift in Sources */,
 				80EDD56325C196EA008754FD /* CurrencyExchangeModels.swift in Sources */,
 				80EDD56225C196EA008754FD /* CurrencyExchangeRouter.swift in Sources */,
+				805B2EC025C5284800E3C395 /* UserWorker.swift in Sources */,
 				80EDD56125C196EA008754FD /* CurrencyExchangeWorker.swift in Sources */,
 				80EDD58D25C19DFA008754FD /* CurrencyExchangeCell.swift in Sources */,
 			);

@@ -23,7 +23,8 @@ enum CurrencyExchange
         }
         struct Response
         {
-            var title: String
+            var from: Currency
+            var to: Currency
         }
         struct ViewModel
         {
@@ -43,6 +44,77 @@ enum CurrencyExchange
         struct ViewModel
         {
             var currencies: [Currency]
+        }
+    }
+    
+    enum ExchangeContext  {
+        case From
+        case To
+    }
+    
+    enum ChangeExchange
+    {
+        struct Request
+        {
+            var context: ExchangeContext
+            var index: Int
+        }
+        struct Response
+        {
+        }
+        struct ViewModel
+        {
+        }
+    }
+    
+    enum FetchCurrentCurrencyExchange
+    {
+        struct Request
+        {
+        }
+        struct Response
+        {
+            var exchangeFromIndex: Int
+            var exchangeToIndex: Int
+            var exchangeFrom: Currency
+            var exchangeTo: Currency
+            var context: ExchangeContext
+        }
+        struct ViewModel
+        {
+            var exchangeFromIndex: Int
+            var exchangeToIndex: Int
+            var exchangeFromTo: String
+            var exchangeToFrom: String
+            var context: ExchangeContext
+        }
+    }
+    
+    enum CountExchange {
+        enum ExchangeType {
+            case FromTo
+            case ToFrom
+        }
+        struct Request
+        {
+            var context: ExchangeContext
+            var text: String?
+        }
+        struct Response
+        {
+            var exchangeFromIndex: Int
+            var exchangeToIndex: Int
+            var exchangeFromToValue: Float?
+            var exchangeToFromValue: Float?
+            var context: ExchangeContext
+        }
+        struct ViewModel
+        {
+            var exchangeFromIndex: Int
+            var exchangeToIndex: Int
+            var exchangeFromToValue: String?
+            var exchangeToFromValue: String?
+            var context: ExchangeContext
         }
     }
     

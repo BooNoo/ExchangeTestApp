@@ -80,6 +80,8 @@ class CurrencyExchangeCollectionView: UICollectionView
 {
     
     public var data: [Currency] = []
+    public var completionHandlerSelectCurrency: ((_ index: Int) -> Void)?
+    public var completionHandlerChangeValueInputCurrency: ((_ text: String?) -> Void)?
     
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
@@ -118,6 +120,10 @@ class CurrencyExchangeCollectionView: UICollectionView
             flowLayout.scrollDirection = .horizontal
         }
     }
+    
+    deinit {
+        print("View deinited")
+    }
 }
 
 extension CurrencyExchangeCollectionView: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout
@@ -129,6 +135,7 @@ extension CurrencyExchangeCollectionView: UICollectionViewDataSource, UICollecti
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurrencyExchangeCell.cellId, for: indexPath) as! CurrencyExchangeCell
         cell.currency = data[indexPath.row]
+        cell.completionHandlerChangeValueInputCurrency = completionHandlerChangeValueInputCurrency
         return cell
     }
     
@@ -143,12 +150,8 @@ extension CurrencyExchangeCollectionView: UICollectionViewDataSource, UICollecti
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 20
     }
-
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(indexPath.row)
-    }
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        print(Int(targetContentOffset.pointee.x / frame.width))
+        self.completionHandlerSelectCurrency?(Int(targetContentOffset.pointee.x / frame.width))
     }
 }

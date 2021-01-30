@@ -16,6 +16,8 @@ protocol CurrencyExchangeDisplayLogic: class
 {
     func setNavigationTitle(viewModel: CurrencyExchange.SetNavigationTitle.ViewModel)
     func displayFetchedCurrencies(viewModel: CurrencyExchange.FetchCurrencies.ViewModel)
+    func displayCurrentCurrencyExchange(viewModel: CurrencyExchange.FetchCurrentCurrencyExchange.ViewModel)
+    func displayCountExchange(viewModel: CurrencyExchange.CountExchange.ViewModel)
 }
 
 class CurrencyExchangeViewController: UIViewController
@@ -56,12 +58,12 @@ class CurrencyExchangeViewController: UIViewController
         router.viewController = viewController
         router.dataStore = interactor
         setupView()
+        setupTarget()
     }
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        interactor?.getNavigationTitle(request: CurrencyExchange.SetNavigationTitle.Request())
         interactor?.fetchCurrencies(request: CurrencyExchange.FetchCurrencies.Request())
     }
     
@@ -70,16 +72,67 @@ class CurrencyExchangeViewController: UIViewController
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Exchange", style: .plain, target: self, action: #selector(handleExchangeTaped))
     }
     
+    private func setupTarget()
+    {
+        contentView.exchangeFromCollectionView.completionHandlerSelectCurrency = handleExchangeFrom
+        contentView.exchangeToCollectionView.completionHandlerSelectCurrency = handleExchangeTo
+        
+        contentView.exchangeFromCollectionView.completionHandlerChangeValueInputCurrency = handelChangeValueInputFrom
+        contentView.exchangeToCollectionView.completionHandlerChangeValueInputCurrency = handelChangeValueInputTo
+    }
+    
+    @objc private func handleExchangeFrom(index: Int) {
+        interactor?.changeExchange(request: CurrencyExchange.ChangeExchange.Request(context: .From, index: index))
+    }
+    
+    @objc private func handleExchangeTo(index: Int) {
+        interactor?.changeExchange(request: CurrencyExchange.ChangeExchange.Request(context: .To, index: index))
+    }
+    
+    @objc private func handelChangeValueInputFrom(text: String?) {
+        interactor?.countExchange(request: CurrencyExchange.CountExchange.Request(context: .From, text: text))
+    }
+    
+    @objc private func handelChangeValueInputTo(text: String?) {
+        interactor?.countExchange(request: CurrencyExchange.CountExchange.Request(context: .To, text: text))
+    }
+    
     @objc private func handleExchangeTaped() {
         print(1)
+    }
+    
+    private func getActiveCells(from: Int, to: Int) -> (CurrencyExchangeCell, CurrencyExchangeCell)?
+    {
+        guard  let cellFrom = contentView.exchangeFromCollectionView.cellForItem(at: IndexPath(row: from, section: 0)) as? CurrencyExchangeCell else { return nil }
+        guard  let cellTo = contentView.exchangeToCollectionView.cellForItem(at: IndexPath(row: to, section: 0)) as? CurrencyExchangeCell else { return nil }
+        return (cellFrom, cellTo)
     }
 
 }
 
 extension CurrencyExchangeViewController: CurrencyExchangeDisplayLogic {
+    func displayCountExchange(viewModel: CurrencyExchange.CountExchange.ViewModel) {
+        guard let (cellFrom, cellTo) = getActiveCells(from: viewModel.exchangeFromIndex, to: viewModel.exchangeToIndex) else { return }
+        switch viewModel.context {
+        case .From:
+            cellTo.exchangeValueInput.text = viewModel.exchangeToFromValue
+        case .To:
+            cellFrom.exchangeValueInput.text = viewModel.exchangeFromToValue
+        }
+    }
+    
+    func displayCurrentCurrencyExchange(viewModel: CurrencyExchange.FetchCurrentCurrencyExchange.ViewModel) {
+        guard let (cellFrom, cellTo) = getActiveCells(from: viewModel.exchangeFromIndex, to: viewModel.exchangeToIndex) else { return }
+        cellFrom.exchangeValueInput.text = nil
+        cellFrom.exchangeFromToLabel.text = viewModel.exchangeFromTo
+        cellTo.exchangeValueInput.text = nil
+        cellTo.exchangeFromToLabel.text = viewModel.exchangeToFrom
+    }
     
     func displayFetchedCurrencies(viewModel: CurrencyExchange.FetchCurrencies.ViewModel) {
         contentView.setupData(data: viewModel.currencies)
+        interactor?.fetchCurrentCurrencyExchange(request: CurrencyExchange.FetchCurrentCurrencyExchange.Request())
+        interactor?.getNavigationTitle(request: CurrencyExchange.SetNavigationTitle.Request())
     }
     
     func setNavigationTitle(viewModel: CurrencyExchange.SetNavigationTitle.ViewModel)

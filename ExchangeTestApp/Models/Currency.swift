@@ -7,13 +7,9 @@
 
 import Foundation
 
-struct Currency: Encodable, Equatable
+struct Currency: Encodable
 {
     var code: String
     var value: Float
-}
-
-func ==(lhs: Currency, rhs: Currency) -> Bool
-{
-    return lhs.code == rhs.code
+    var symbol: String
 }
