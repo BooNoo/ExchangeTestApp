@@ -13,7 +13,7 @@ class UserMemmoryStore: UserStoreProtocol
     static var user = User(wallets: [
         CurrencyWallet(code: "EUR", balance: 100.0),
         CurrencyWallet(code: "USD", balance: 100.0),
-        CurrencyWallet(code: "GBR", balance: 100.0)
+        CurrencyWallet(code: "GBP", balance: 80.0)
     ])
     
     func fetchUser(completionHandler: @escaping (() throws -> User) -> Void) {

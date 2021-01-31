@@ -63,7 +63,7 @@ extension CurrencyExchangePresenter: CurrencyExchangePresentationLogic {
     
     func presentFetchedCurrencies(response: CurrencyExchange.FetchCurrencies.Response)
     {
-        viewController?.displayFetchedCurrencies(viewModel: CurrencyExchange.FetchCurrencies.ViewModel(currencies: response.currencies))
+        viewController?.displayFetchedCurrencies(viewModel: CurrencyExchange.FetchCurrencies.ViewModel(currenciesCards: response.currenciesCards))
     }
     
     func setNavigationTitle(responce: CurrencyExchange.SetNavigationTitle.Response)

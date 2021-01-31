@@ -14,6 +14,10 @@ import UIKit
 
 enum CurrencyExchange
 {
+    struct CurrencyExchangeCard {
+        var currency: Currency
+        var userBalance: Float
+    }
     // MARK: Use cases
     
     enum SetNavigationTitle
@@ -39,11 +43,11 @@ enum CurrencyExchange
         }
         struct Response
         {
-            var currencies: [Currency]
+            var currenciesCards: [CurrencyExchangeCard]
         }
         struct ViewModel
         {
-            var currencies: [Currency]
+            var currenciesCards: [CurrencyExchangeCard]
         }
     }
     
@@ -91,10 +95,6 @@ enum CurrencyExchange
     }
     
     enum CountExchange {
-        enum ExchangeType {
-            case FromTo
-            case ToFrom
-        }
         struct Request
         {
             var context: ExchangeContext
@@ -115,6 +115,19 @@ enum CurrencyExchange
             var exchangeFromToValue: String?
             var exchangeToFromValue: String?
             var context: ExchangeContext
+        }
+    }
+    
+    enum Exchange {
+
+        struct Request
+        {
+        }
+        struct Response
+        {
+        }
+        struct ViewModel
+        {
         }
     }
     

@@ -98,7 +98,7 @@ class CurrencyExchangeViewController: UIViewController
     }
     
     @objc private func handleExchangeTaped() {
-        print(1)
+        interactor?.exchange(request: CurrencyExchange.Exchange.Request())
     }
     
     private func getActiveCells(from: Int, to: Int) -> (CurrencyExchangeCell, CurrencyExchangeCell)?
@@ -130,7 +130,7 @@ extension CurrencyExchangeViewController: CurrencyExchangeDisplayLogic {
     }
     
     func displayFetchedCurrencies(viewModel: CurrencyExchange.FetchCurrencies.ViewModel) {
-        contentView.setupData(data: viewModel.currencies)
+        contentView.setupData(data: viewModel.currenciesCards)
         interactor?.fetchCurrentCurrencyExchange(request: CurrencyExchange.FetchCurrentCurrencyExchange.Request())
         interactor?.getNavigationTitle(request: CurrencyExchange.SetNavigationTitle.Request())
     }

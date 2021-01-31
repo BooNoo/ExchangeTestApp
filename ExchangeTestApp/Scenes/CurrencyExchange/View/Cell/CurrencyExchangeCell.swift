@@ -45,10 +45,10 @@ class CurrencyExchangeCell: UICollectionViewCell
     public var completionHandlerChangeValueInputCurrency: ((_ text: String?) -> Void)?
     
     static let cellId = "CurrencyExchangeCellId"
-    public var currency: Currency? {
+    public var currencyCard: CurrencyExchange.CurrencyExchangeCard? {
         didSet {
-            guard let currency = currency else { return }
-            self.setupData(data: currency)
+            guard let currencyCard = currencyCard else { return }
+            self.setupData(data: currencyCard)
         }
     }
     
@@ -118,10 +118,10 @@ class CurrencyExchangeCell: UICollectionViewCell
     }
     
     
-    private func setupData(data: Currency)
+    private func setupData(data: CurrencyExchange.CurrencyExchangeCard)
     {
-        currentCurrencyBalanceLabel.text = "You have: 100\(data.symbol)"
-        currencyLabel.text = data.code
+        currentCurrencyBalanceLabel.text = "You have: \(data.userBalance)\(data.currency.symbol)"
+        currencyLabel.text = data.currency.code
     }
     
     @objc private func handlerChangeValue() {
