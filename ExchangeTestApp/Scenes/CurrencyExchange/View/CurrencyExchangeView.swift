@@ -65,13 +65,15 @@ class CurrencyExchangeView: UIView
             .forEach(NSLayoutConstraint.activate(_:))
     }
     
-    public func setupData(data: [CurrencyExchange.CurrencyExchangeCard])
+    public func setupData(data: [CurrencyExchange.FetchCurrencies.ViewModel.DisplayedCurrencyExchangeCard])
     {
         exchangeFromCollectionView.data = data
         exchangeFromCollectionView.reloadData()
+        exchangeFromCollectionView.layoutIfNeeded()
         
         exchangeToCollectionView.data = data
         exchangeToCollectionView.reloadData()
+        exchangeToCollectionView.layoutIfNeeded()
     }
     
 }
@@ -79,7 +81,7 @@ class CurrencyExchangeView: UIView
 class CurrencyExchangeCollectionView: UICollectionView
 {
     
-    public var data: [CurrencyExchange.CurrencyExchangeCard] = []
+    public var data: [CurrencyExchange.FetchCurrencies.ViewModel.DisplayedCurrencyExchangeCard] = []
     public var completionHandlerSelectCurrency: ((_ index: Int) -> Void)?
     public var completionHandlerChangeValueInputCurrency: ((_ text: String?) -> Void)?
     

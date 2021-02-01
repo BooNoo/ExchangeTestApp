@@ -36,7 +36,7 @@ class CurrencyExchangeCell: UICollectionViewCell
     
     public let exchangeFromToLabel: UILabel = {
         let label = UILabel()
-        label.text = "€1.0 = €1.0"
+//        label.text = "€1.0 = €1.0"
         label.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         label.textColor = .black
         return label
@@ -45,7 +45,7 @@ class CurrencyExchangeCell: UICollectionViewCell
     public var completionHandlerChangeValueInputCurrency: ((_ text: String?) -> Void)?
     
     static let cellId = "CurrencyExchangeCellId"
-    public var currencyCard: CurrencyExchange.CurrencyExchangeCard? {
+    public var currencyCard: CurrencyExchange.FetchCurrencies.ViewModel.DisplayedCurrencyExchangeCard? {
         didSet {
             guard let currencyCard = currencyCard else { return }
             self.setupData(data: currencyCard)
@@ -96,7 +96,6 @@ class CurrencyExchangeCell: UICollectionViewCell
             exchangeValueInput.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             exchangeValueInput.leftAnchor.constraint(equalTo: currentCurrencyBalanceLabel.rightAnchor, constant: 10),
             exchangeValueInput.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -10),
-//            exchangeValueInput.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
         ]
         
         let exchangeFromToLabelConstraints = [
@@ -114,11 +113,11 @@ class CurrencyExchangeCell: UICollectionViewCell
     
     private func setupTarget()
     {
-        exchangeValueInput.addTarget(self, action: #selector(handlerChangeValue), for: .allEditingEvents)
+        exchangeValueInput.addTarget(self, action: #selector(handlerChangeValue), for: .editingChanged)
     }
     
     
-    private func setupData(data: CurrencyExchange.CurrencyExchangeCard)
+    private func setupData(data: CurrencyExchange.FetchCurrencies.ViewModel.DisplayedCurrencyExchangeCard)
     {
         currentCurrencyBalanceLabel.text = "You have: \(data.userBalance)\(data.currency.symbol)"
         currencyLabel.text = data.currency.code

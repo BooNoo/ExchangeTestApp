@@ -47,7 +47,11 @@ enum CurrencyExchange
         }
         struct ViewModel
         {
-            var currenciesCards: [CurrencyExchangeCard]
+            struct DisplayedCurrencyExchangeCard {
+                var currency: Currency
+                var userBalance: String
+            }
+            var currenciesCards: [DisplayedCurrencyExchangeCard]
         }
     }
     
@@ -82,6 +86,8 @@ enum CurrencyExchange
             var exchangeToIndex: Int
             var exchangeFrom: Currency
             var exchangeTo: Currency
+            var exchangeFromValue: Float?
+            var exchangeToValue: Float?
             var context: ExchangeContext
         }
         struct ViewModel
@@ -90,6 +96,8 @@ enum CurrencyExchange
             var exchangeToIndex: Int
             var exchangeFromTo: String
             var exchangeToFrom: String
+            var exchangeFromValue: String?
+            var exchangeToValue: String?
             var context: ExchangeContext
         }
     }

@@ -123,9 +123,9 @@ extension CurrencyExchangeViewController: CurrencyExchangeDisplayLogic {
     
     func displayCurrentCurrencyExchange(viewModel: CurrencyExchange.FetchCurrentCurrencyExchange.ViewModel) {
         guard let (cellFrom, cellTo) = getActiveCells(from: viewModel.exchangeFromIndex, to: viewModel.exchangeToIndex) else { return }
-        cellFrom.exchangeValueInput.text = nil
+        cellFrom.exchangeValueInput.text = viewModel.exchangeFromValue
         cellFrom.exchangeFromToLabel.text = viewModel.exchangeFromTo
-        cellTo.exchangeValueInput.text = nil
+        cellTo.exchangeValueInput.text = viewModel.exchangeToValue
         cellTo.exchangeFromToLabel.text = viewModel.exchangeToFrom
     }
     

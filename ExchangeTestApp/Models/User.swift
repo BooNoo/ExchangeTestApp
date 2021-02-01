@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct User
+struct User: Codable
 {
     var wallets: [CurrencyWallet]
 }
 
-struct CurrencyWallet {
+struct CurrencyWallet: Codable {
     var code: String
     var balance: Float
 }

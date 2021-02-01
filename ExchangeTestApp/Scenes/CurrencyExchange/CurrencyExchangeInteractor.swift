@@ -53,7 +53,21 @@ class CurrencyExchangeInteractor: CurrencyExchangeDataStore
     
     func fetchCurrentCurrencyExchange(_ context: CurrencyExchange.ExchangeContext)
     {
-        let response = CurrencyExchange.FetchCurrentCurrencyExchange.Response(exchangeFromIndex: exchangeFromIndex, exchangeToIndex: exchangeToIndex, exchangeFrom: currencies[exchangeFromIndex], exchangeTo: currencies[exchangeToIndex], context: context)
+        var exchangeFromValue: Float?
+        var exchangeToValue: Float?
+        switch context {
+        case .From:
+            guard let valueTo = valueTo  else { break }
+            exchangeFromValue = valueTo * currencies[exchangeFromIndex].value
+            exchangeToValue = valueTo
+        case .To:
+            guard let valueFrom = valueFrom  else { break }
+            exchangeToValue = valueFrom * currencies[exchangeToIndex].value
+            exchangeFromValue = valueFrom
+        }
+        valueFrom = exchangeFromValue
+        valueTo = exchangeToValue
+        let response = CurrencyExchange.FetchCurrentCurrencyExchange.Response(exchangeFromIndex: exchangeFromIndex, exchangeToIndex: exchangeToIndex, exchangeFrom: currencies[exchangeFromIndex], exchangeTo: currencies[exchangeToIndex], exchangeFromValue: exchangeFromValue, exchangeToValue: exchangeToValue, context: context)
         presenter?.presentCurrentCurrencyExchange(response: response)
     }
     
@@ -62,23 +76,17 @@ class CurrencyExchangeInteractor: CurrencyExchangeDataStore
         return to.value / from.value
     }
     
-    func initCards() {
-        for currency in self.currencies {
+    func initCards()
+    {
+        cards = []
+        for currency in currencies {
             var card = CurrencyExchange.CurrencyExchangeCard(currency: currency, userBalance: 0)
-            if let index = self.user?.wallets.firstIndex(where: { return $0.code == currency.code }) {
-                card.userBalance = self.user?.wallets[index].balance ?? 0.0
+            if let index = user?.wallets.firstIndex(where: { return $0.code == currency.code }) {
+                card.userBalance = user?.wallets[index].balance ?? 0.0
             }
             cards.append(card)
         }
-    }
-    
-    func updateCards() {
-        for i in 0...self.cards.count - 1 {
-            if let index = self.user?.wallets.firstIndex(where: { return $0.code == self.cards[i].currency.code }) {
-                self.cards[i].userBalance = self.user?.wallets[index].balance ?? 0.0
-            }
-        }
-        self.presenter?.presentFetchedCurrencies(response: CurrencyExchange.FetchCurrencies.Response(currenciesCards: self.cards))
+        presenter?.presentFetchedCurrencies(response: CurrencyExchange.FetchCurrencies.Response(currenciesCards: cards))
     }
 }
 
@@ -140,7 +148,6 @@ extension CurrencyExchangeInteractor: CurrencyExchangeBusinessLogic
                         self.currencies = currencies
                         self.user = user
                         self.initCards()
-                        self.presenter?.presentFetchedCurrencies(response: CurrencyExchange.FetchCurrencies.Response(currenciesCards: self.cards))
                     }
                 })
             })
@@ -153,20 +160,18 @@ extension CurrencyExchangeInteractor: CurrencyExchangeBusinessLogic
         let from = currencies[exchangeFromIndex]
         let to = currencies[exchangeToIndex]
         let addValue: Float = value * getExchangeValue(from: from, to: to)
-        let removeValue: Float = value
+        let removeValue: Float = -value
         
         let queue = DispatchQueue.global(qos: .userInitiated)
         queue.async { [weak self] in
             guard let self = self else { return }
             self.worker?.refillUserWallet(currencyCode: to.code, value: addValue, completionHandler: { (user) in
-                self.worker?.refillUserWallet(currencyCode: from.code, value: -removeValue, completionHandler: { (user) in
+                self.worker?.refillUserWallet(currencyCode: from.code, value: removeValue, completionHandler: { (user) in
                     DispatchQueue.main.async {
                         self.user = user
-                        self.updateCards()
-                        self.fetchCurrentCurrencyExchange(request: CurrencyExchange.FetchCurrentCurrencyExchange.Request())
+                        self.initCards()
                     }
                 })
-
             })
         }
     }

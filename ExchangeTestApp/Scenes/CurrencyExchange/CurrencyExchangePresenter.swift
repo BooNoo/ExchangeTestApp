@@ -57,13 +57,25 @@ extension CurrencyExchangePresenter: CurrencyExchangePresentationLogic {
     {
         let exchangeFromTo = getExchangeString(from: response.exchangeFrom, to: response.exchangeTo)
         let exchangeToFrom = getExchangeString(from: response.exchangeTo, to: response.exchangeFrom)
-        let viewModel = CurrencyExchange.FetchCurrentCurrencyExchange.ViewModel(exchangeFromIndex: response.exchangeFromIndex, exchangeToIndex: response.exchangeToIndex, exchangeFromTo: exchangeFromTo, exchangeToFrom: exchangeToFrom, context: response.context)
+        let exchangeFromValue = response.exchangeFromValue != nil ? formatFloat(value: response.exchangeFromValue ?? 0.0, minimumFractionDigits: 0, maximumFractionDigits: 2) : nil
+        let exchangeToValue = response.exchangeToValue != nil ? formatFloat(value: response.exchangeToValue ?? 0.0, minimumFractionDigits: 0, maximumFractionDigits: 2) : nil
+        let viewModel = CurrencyExchange.FetchCurrentCurrencyExchange.ViewModel(exchangeFromIndex: response.exchangeFromIndex, exchangeToIndex: response.exchangeToIndex, exchangeFromTo: exchangeFromTo, exchangeToFrom: exchangeToFrom, exchangeFromValue: exchangeFromValue, exchangeToValue: exchangeToValue, context: response.context)
         viewController?.displayCurrentCurrencyExchange(viewModel: viewModel)
     }
     
     func presentFetchedCurrencies(response: CurrencyExchange.FetchCurrencies.Response)
     {
-        viewController?.displayFetchedCurrencies(viewModel: CurrencyExchange.FetchCurrencies.ViewModel(currenciesCards: response.currenciesCards))
+//        response.currenciesCards
+//            .forEach {
+//                $0.userBalance =
+//            }
+        var displayedCards: [CurrencyExchange.FetchCurrencies.ViewModel.DisplayedCurrencyExchangeCard] = []
+        for card in response.currenciesCards
+        {
+            let displayedCard = CurrencyExchange.FetchCurrencies.ViewModel.DisplayedCurrencyExchangeCard(currency: card.currency, userBalance: formatFloat(value: card.userBalance, minimumFractionDigits: 0, maximumFractionDigits: 2))
+            displayedCards.append(displayedCard)
+        }
+        viewController?.displayFetchedCurrencies(viewModel: CurrencyExchange.FetchCurrencies.ViewModel(currenciesCards: displayedCards))
     }
     
     func setNavigationTitle(responce: CurrencyExchange.SetNavigationTitle.Response)
