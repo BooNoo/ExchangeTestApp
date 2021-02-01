@@ -15,11 +15,15 @@ import UIKit
 class CurrencyExchangeWorker
 {
     var currencyMemmoryWorkerApi = CurrencyWorker(currencyStore: CurrencyMemmoryStore())
+    var currencyApi = CurrencyWorker(currencyStore: CurrencyApi())
     var userMemmoryWorkerApi = UserWorker(userStore: UserDefaultsStore())
     
     func fetchCurrencies(completionHandler: @escaping ([Currency]) -> Void)
     {
-        self.currencyMemmoryWorkerApi.fetchCurrencies { (currencies) in
+//        self.currencyMemmoryWorkerApi.fetchCurrencies { (currencies) in
+//            completionHandler(currencies)
+//        }
+        self.currencyApi.fetchCurrencies { (currencies) in
             completionHandler(currencies)
         }
     }

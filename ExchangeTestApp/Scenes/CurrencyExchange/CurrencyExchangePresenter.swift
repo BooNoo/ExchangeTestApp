@@ -18,6 +18,7 @@ protocol CurrencyExchangePresentationLogic
     func presentFetchedCurrencies(response: CurrencyExchange.FetchCurrencies.Response)
     func presentCurrentCurrencyExchange(response: CurrencyExchange.FetchCurrentCurrencyExchange.Response)
     func presentCountExchange(response: CurrencyExchange.CountExchange.Response)
+    func presentExchange(response: CurrencyExchange.Exchange.Response)
 }
 
 class CurrencyExchangePresenter
@@ -34,7 +35,8 @@ class CurrencyExchangePresenter
         let formatter = NumberFormatter()
         formatter.minimumFractionDigits = minimumFractionDigits
         formatter.maximumFractionDigits = maximumFractionDigits
-        return formatter.string(from: NSNumber(value: value)) ?? "\(value)"
+        let formatted = formatter.string(from: NSNumber(value: value)) ?? "\(value)"
+        return formatted.replacingOccurrences(of: ",", with: ".")
     }
     
     func getExchangeString(from: Currency, to: Currency) -> String
@@ -45,9 +47,15 @@ class CurrencyExchangePresenter
     }
 
 }
-
-extension CurrencyExchangePresenter: CurrencyExchangePresentationLogic {
-    func presentCountExchange(response: CurrencyExchange.CountExchange.Response) {
+extension CurrencyExchangePresenter: CurrencyExchangePresentationLogic
+{
+    func presentExchange(response: CurrencyExchange.Exchange.Response)
+    {
+        viewController?.displayExchange(viewModel: CurrencyExchange.Exchange.ViewModel(info: response.info))
+    }
+    
+    func presentCountExchange(response: CurrencyExchange.CountExchange.Response)
+    {
         let exchangeFromToValue: String? = response.exchangeFromToValue != nil ? formatFloat(value: response.exchangeFromToValue ?? 0.0, minimumFractionDigits: 0, maximumFractionDigits: 2) : nil
         let exchangeToFromValue: String? = response.exchangeToFromValue != nil ? formatFloat(value: response.exchangeToFromValue ?? 0.0, minimumFractionDigits: 0, maximumFractionDigits: 2) : nil
         viewController?.displayCountExchange(viewModel: CurrencyExchange.CountExchange.ViewModel(exchangeFromIndex: response.exchangeFromIndex, exchangeToIndex: response.exchangeToIndex, exchangeFromToValue: exchangeFromToValue, exchangeToFromValue: exchangeToFromValue, context: response.context))
@@ -65,10 +73,6 @@ extension CurrencyExchangePresenter: CurrencyExchangePresentationLogic {
     
     func presentFetchedCurrencies(response: CurrencyExchange.FetchCurrencies.Response)
     {
-//        response.currenciesCards
-//            .forEach {
-//                $0.userBalance =
-//            }
         var displayedCards: [CurrencyExchange.FetchCurrencies.ViewModel.DisplayedCurrencyExchangeCard] = []
         for card in response.currenciesCards
         {

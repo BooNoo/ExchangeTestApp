@@ -58,6 +58,7 @@ enum CurrencyExchange
     enum ExchangeContext  {
         case From
         case To
+        case None
     }
     
     enum ChangeExchange
@@ -133,9 +134,11 @@ enum CurrencyExchange
         }
         struct Response
         {
+            var info: String
         }
         struct ViewModel
         {
+            var info: String
         }
     }
     

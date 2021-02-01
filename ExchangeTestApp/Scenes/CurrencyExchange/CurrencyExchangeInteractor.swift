@@ -39,31 +39,34 @@ class CurrencyExchangeInteractor: CurrencyExchangeDataStore
     var exchangeToIndex: Int = 0
     var valueFrom: Float?
     var valueTo: Float?
+    var timer: Timer?
         
-    func setTitle()
+    private func setTitle()
     {
         presenter?.setNavigationTitle(responce: CurrencyExchange.SetNavigationTitle.Response(from: currencies[exchangeFromIndex], to: currencies[exchangeToIndex]))
     }
     
-    func updateIndexFromtoChange(_ context: CurrencyExchange.ExchangeContext)
+    private func updateIndexFromtoChange(_ context: CurrencyExchange.ExchangeContext)
     {
         setTitle()
         fetchCurrentCurrencyExchange(context)
     }
     
-    func fetchCurrentCurrencyExchange(_ context: CurrencyExchange.ExchangeContext)
+    private func fetchCurrentCurrencyExchange(_ context: CurrencyExchange.ExchangeContext)
     {
         var exchangeFromValue: Float?
         var exchangeToValue: Float?
         switch context {
         case .From:
             guard let valueTo = valueTo  else { break }
-            exchangeFromValue = valueTo * currencies[exchangeFromIndex].value
+            exchangeFromValue = valueTo * getExchangeValue(from: currencies[exchangeToIndex], to: currencies[exchangeFromIndex])
             exchangeToValue = valueTo
         case .To:
             guard let valueFrom = valueFrom  else { break }
-            exchangeToValue = valueFrom * currencies[exchangeToIndex].value
+            exchangeToValue = valueFrom * getExchangeValue(from: currencies[exchangeFromIndex], to: currencies[exchangeToIndex])
             exchangeFromValue = valueFrom
+        case .None:
+            break
         }
         valueFrom = exchangeFromValue
         valueTo = exchangeToValue
@@ -71,12 +74,12 @@ class CurrencyExchangeInteractor: CurrencyExchangeDataStore
         presenter?.presentCurrentCurrencyExchange(response: response)
     }
     
-    func getExchangeValue(from: Currency, to: Currency) -> Float
+    private func getExchangeValue(from: Currency, to: Currency) -> Float
     {
         return to.value / from.value
     }
     
-    func initCards()
+    private func initCards()
     {
         cards = []
         for currency in currencies {
@@ -87,6 +90,63 @@ class CurrencyExchangeInteractor: CurrencyExchangeDataStore
             cards.append(card)
         }
         presenter?.presentFetchedCurrencies(response: CurrencyExchange.FetchCurrencies.Response(currenciesCards: cards))
+    }
+    
+    private func checkIsUserCanDoExchange(value: Float, from: Currency) -> Bool
+    {
+        guard let user = user else { return false }
+        if let index = user.wallets.firstIndex(where: { return $0.code == from.code }) {
+            return user.wallets[index].balance >= value
+        }
+        return false
+    }
+    
+    private func exchange()
+    {
+        guard let value = valueFrom else { return }
+        let from = currencies[exchangeFromIndex]
+        let to = currencies[exchangeToIndex]
+        let addValue: Float = value * getExchangeValue(from: from, to: to)
+        let removeValue: Float = -value
+        let sucsessInfo = "Sucsess exchange\n +\(addValue) \(to.code)\n\(removeValue) \(from.code)"
+        let failureInfo = "Failure exchange\nNot enough currency \(from.code)"
+        if (checkIsUserCanDoExchange(value: value, from: from))
+        {
+            let queue = DispatchQueue.global(qos: .userInitiated)
+            queue.async { [weak self] in
+                guard let self = self else { return }
+                self.worker?.refillUserWallet(currencyCode: to.code, value: addValue, completionHandler: { (user) in
+                    self.worker?.refillUserWallet(currencyCode: from.code, value: removeValue, completionHandler: { (user) in
+                        DispatchQueue.main.async {
+                            self.user = user
+                            self.initCards()
+                            self.presenter?.presentExchange(response: CurrencyExchange.Exchange.Response(info: sucsessInfo))
+                        }
+                    })
+                })
+            }
+        } else {
+            self.presenter?.presentExchange(response: CurrencyExchange.Exchange.Response(info: failureInfo))
+        }
+    }
+    
+    @objc private func fetchCurrenciesData()
+    {
+        print("FetchCurrenciesData")
+        let queue = DispatchQueue.global(qos: .userInitiated)
+        queue.async { [weak self] in
+            guard let self = self else { return }
+//            Thread.sleep(until: Date().addingTimeInterval(3))
+            self.worker?.fetchCurrencies(completionHandler: { (currencies) in
+                self.worker?.fetchUser(completionHandler: { (user) in
+                    DispatchQueue.main.async {
+                        self.currencies = currencies
+                        self.user = user
+                        self.initCards()
+                    }
+                })
+            })
+        }
     }
 }
 
@@ -110,6 +170,8 @@ extension CurrencyExchangeInteractor: CurrencyExchangeBusinessLogic
                 fromToValue = exchangeValue
                 valueFrom = exchangeValue
                 valueTo = value
+            case .None:
+                break
             }
         }
         presenter?.presentCountExchange(response: CurrencyExchange.CountExchange.Response(exchangeFromIndex: exchangeFromIndex, exchangeToIndex: exchangeToIndex, exchangeFromToValue: fromToValue, exchangeToFromValue: toFromValue, context: request.context))
@@ -117,7 +179,7 @@ extension CurrencyExchangeInteractor: CurrencyExchangeBusinessLogic
     
     func fetchCurrentCurrencyExchange(request: CurrencyExchange.FetchCurrentCurrencyExchange.Request)
     {
-        fetchCurrentCurrencyExchange(.From)
+        fetchCurrentCurrencyExchange(.None)
     }
     
     func getNavigationTitle(request: CurrencyExchange.SetNavigationTitle.Request)
@@ -132,48 +194,20 @@ extension CurrencyExchangeInteractor: CurrencyExchangeBusinessLogic
             exchangeFromIndex = request.index
         case .To:
             exchangeToIndex = request.index
+        case .None:
+            break
         }
         updateIndexFromtoChange(request.context)
     }
     
     func fetchCurrencies(request: CurrencyExchange.FetchCurrencies.Request)
     {
-        let queue = DispatchQueue.global(qos: .userInitiated)
-        queue.async { [weak self] in
-            guard let self = self else { return }
-//            Thread.sleep(until: Date().addingTimeInterval(3))
-            self.worker?.fetchCurrencies(completionHandler: { (currencies) in
-                self.worker?.fetchUser(completionHandler: { (user) in
-                    DispatchQueue.main.async {
-                        self.currencies = currencies
-                        self.user = user
-                        self.initCards()
-                    }
-                })
-            })
-        }
+        timer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(fetchCurrenciesData), userInfo: nil, repeats: true)
+        timer?.fire()
     }
     
     func exchange(request: CurrencyExchange.Exchange.Request)
     {
-        guard let value = valueFrom else { return }
-        let from = currencies[exchangeFromIndex]
-        let to = currencies[exchangeToIndex]
-        let addValue: Float = value * getExchangeValue(from: from, to: to)
-        let removeValue: Float = -value
-        
-        let queue = DispatchQueue.global(qos: .userInitiated)
-        queue.async { [weak self] in
-            guard let self = self else { return }
-            self.worker?.refillUserWallet(currencyCode: to.code, value: addValue, completionHandler: { (user) in
-                self.worker?.refillUserWallet(currencyCode: from.code, value: removeValue, completionHandler: { (user) in
-                    DispatchQueue.main.async {
-                        self.user = user
-                        self.initCards()
-                    }
-                })
-            })
-        }
+        exchange()
     }
-    
 }

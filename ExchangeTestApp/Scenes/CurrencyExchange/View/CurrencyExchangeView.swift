@@ -21,13 +21,20 @@ class CurrencyExchangeView: UIView
         let cv = CurrencyExchangeCollectionView(frame: .zero, collectionViewLayout: layout)
         return cv
     }()
+    
+    public var exchangeImage: UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(named: "exchange")
+        view.contentMode = .scaleAspectFit
+        return view
+    }()
 
     init()
     {
         super.init(frame: .zero)
         addSubviews()
         setupConstraints()
-        backgroundColor = .white
+        backgroundColor = .lightGray
     }
     
     required init?(coder: NSCoder) {
@@ -37,7 +44,8 @@ class CurrencyExchangeView: UIView
     private func addSubviews()
     {
         [exchangeFromCollectionView,
-         exchangeToCollectionView
+         exchangeToCollectionView,
+         exchangeImage,
         ]
         .forEach {
             addSubview($0)
@@ -53,6 +61,13 @@ class CurrencyExchangeView: UIView
             exchangeFromCollectionView.rightAnchor.constraint(equalTo: rightAnchor, constant: 0),
         ]
         
+        let exchangeImageConstraints = [
+            exchangeImage.heightAnchor.constraint(equalToConstant: 40),
+            exchangeImage.widthAnchor.constraint(equalToConstant: 40),
+            exchangeImage.centerXAnchor.constraint(equalTo: centerXAnchor),
+            exchangeImage.topAnchor.constraint(equalTo: exchangeFromCollectionView.bottomAnchor, constant: -10)
+        ]
+        
         let exchangeToCollectionViewConstraints = [
             exchangeToCollectionView.topAnchor.constraint(equalTo: exchangeFromCollectionView.bottomAnchor, constant: 20),
             exchangeToCollectionView.leftAnchor.constraint(equalTo: leftAnchor, constant: 0),
@@ -60,7 +75,8 @@ class CurrencyExchangeView: UIView
         ]
         
         [exchangeFromCollectionViewConstraints,
-         exchangeToCollectionViewConstraints
+         exchangeToCollectionViewConstraints,
+         exchangeImageConstraints
         ]
             .forEach(NSLayoutConstraint.activate(_:))
     }
@@ -98,7 +114,7 @@ class CurrencyExchangeCollectionView: UICollectionView
     
     private func addSubviews()
     {
-        backgroundColor = .blue
+        backgroundColor = .clear
     }
     
     private func setupConstraints()
@@ -121,6 +137,7 @@ class CurrencyExchangeCollectionView: UICollectionView
         if let flowLayout = collectionViewLayout as? UICollectionViewFlowLayout {
             flowLayout.scrollDirection = .horizontal
         }
+        keyboardDismissMode = .onDrag
     }
     
     deinit {

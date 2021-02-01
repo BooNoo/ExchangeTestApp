@@ -12,14 +12,14 @@ class CurrencyExchangeCell: UICollectionViewCell
     
     private let currencyLabel: UILabel = {
         let view = UILabel()
-        view.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        view.font = UIFont.systemFont(ofSize: 50, weight: .bold)
         view.textColor = .black
         return view
     }()
     
     private let currentCurrencyBalanceLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        label.font = UIFont.systemFont(ofSize: 15, weight: .medium)
         label.textColor = .black
         return label
     }()
@@ -27,17 +27,16 @@ class CurrencyExchangeCell: UICollectionViewCell
     public let exchangeValueInput: UITextField = {
         let view = UITextField()
         view.placeholder = "0.0"
-        view.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        view.font = UIFont.systemFont(ofSize: 50, weight: .bold)
         view.textColor = .black
         view.textAlignment = .right
-        view.keyboardType = .numberPad
+        view.keyboardType = .numbersAndPunctuation
         return view
     }()
     
     public let exchangeFromToLabel: UILabel = {
         let label = UILabel()
-//        label.text = "€1.0 = €1.0"
-        label.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        label.font = UIFont.systemFont(ofSize: 15, weight: .medium)
         label.textColor = .black
         return label
     }()
@@ -66,8 +65,14 @@ class CurrencyExchangeCell: UICollectionViewCell
     
     private func addSubviews()
     {
-        backgroundColor = .blue
-        contentView.backgroundColor = .red
+        backgroundColor = .clear
+        contentView.backgroundColor = .white
+        contentView.layer.cornerRadius = 20
+        contentView.layer.masksToBounds = false
+        contentView.layer.shadowColor = UIColor.black.cgColor
+        contentView.layer.shadowOpacity = 0.5
+        contentView.layer.shadowOffset = CGSize(width: -1, height: 1)
+        contentView.layer.shadowRadius = 1
 
         [currencyLabel,
          currentCurrencyBalanceLabel,
@@ -84,12 +89,12 @@ class CurrencyExchangeCell: UICollectionViewCell
     {
         let currencyLabelConstraints = [
             currencyLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            currencyLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 5),
+            currencyLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 10),
         ]
         
         let currentCurrencyBalanceLabelConstraints = [
-            currentCurrencyBalanceLabel.topAnchor.constraint(equalTo: currencyLabel.bottomAnchor, constant: 20),
-            currentCurrencyBalanceLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 5),
+            currentCurrencyBalanceLabel.topAnchor.constraint(equalTo: currencyLabel.bottomAnchor, constant: 5),
+            currentCurrencyBalanceLabel.leftAnchor.constraint(equalTo: currencyLabel.leftAnchor, constant: 0),
         ]
         
         let exchangeValueInputConstraints = [
@@ -99,7 +104,7 @@ class CurrencyExchangeCell: UICollectionViewCell
         ]
         
         let exchangeFromToLabelConstraints = [
-            exchangeFromToLabel.topAnchor.constraint(equalTo: exchangeValueInput.bottomAnchor, constant: 20),
+            exchangeFromToLabel.topAnchor.constraint(equalTo: exchangeValueInput.bottomAnchor, constant: 5),
             exchangeFromToLabel.rightAnchor.constraint(equalTo: exchangeValueInput.rightAnchor, constant: 0),
         ]
         

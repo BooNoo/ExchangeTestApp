@@ -18,6 +18,7 @@ protocol CurrencyExchangeDisplayLogic: class
     func displayFetchedCurrencies(viewModel: CurrencyExchange.FetchCurrencies.ViewModel)
     func displayCurrentCurrencyExchange(viewModel: CurrencyExchange.FetchCurrentCurrencyExchange.ViewModel)
     func displayCountExchange(viewModel: CurrencyExchange.CountExchange.ViewModel)
+    func displayExchange(viewModel: CurrencyExchange.Exchange.ViewModel)
 }
 
 class CurrencyExchangeViewController: UIViewController
@@ -107,16 +108,33 @@ class CurrencyExchangeViewController: UIViewController
         guard  let cellTo = contentView.exchangeToCollectionView.cellForItem(at: IndexPath(row: to, section: 0)) as? CurrencyExchangeCell else { return nil }
         return (cellFrom, cellTo)
     }
+    
+    
+    private func showNotification(message: String) {
+        let alertController = UIAlertController(title: "Notification", message: message, preferredStyle: UIAlertController.Style.alert)
+        let okAction = UIAlertAction(title: "Ок", style: UIAlertAction.Style.default) {
+            (result : UIAlertAction) -> Void in
+        }
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
+    }
 
 }
 
 extension CurrencyExchangeViewController: CurrencyExchangeDisplayLogic {
+    func displayExchange(viewModel: CurrencyExchange.Exchange.ViewModel) {
+        showNotification(message: viewModel.info)
+    }
+    
     func displayCountExchange(viewModel: CurrencyExchange.CountExchange.ViewModel) {
         guard let (cellFrom, cellTo) = getActiveCells(from: viewModel.exchangeFromIndex, to: viewModel.exchangeToIndex) else { return }
         switch viewModel.context {
         case .From:
             cellTo.exchangeValueInput.text = viewModel.exchangeToFromValue
         case .To:
+            cellFrom.exchangeValueInput.text = viewModel.exchangeFromToValue
+        case .None:
+            cellTo.exchangeValueInput.text = viewModel.exchangeToFromValue
             cellFrom.exchangeValueInput.text = viewModel.exchangeFromToValue
         }
     }
